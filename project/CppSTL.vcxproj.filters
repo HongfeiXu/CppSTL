@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Ch6_STL_Container">
+      <UniqueIdentifier>{7ed8274b-42e5-411d-b892-ce1006895a2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -26,11 +29,14 @@
     <ClInclude Include="src\Ch_4.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\ch_5_STL.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_5_STL.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CommonContainerAbilitiesAndOperations.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

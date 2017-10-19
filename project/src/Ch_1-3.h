@@ -80,7 +80,7 @@ public:
 	explicit MyStack(int size) : stack(size, 0)
 	{
 	}
-	int size() { return stack.size(); }
+	vector<int>::size_type size() { return stack.size(); }
 };
 
 void f3()

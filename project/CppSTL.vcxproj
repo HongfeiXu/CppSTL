@@ -142,9 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ch_5_STL.h" />
     <ClInclude Include="src\Ch_1-3.h" />
     <ClInclude Include="src\Ch_4.h" />
+    <ClInclude Include="src\Ch_5_STL.h" />
+    <ClInclude Include="src\CommonContainerAbilitiesAndOperations.h" />
     <ClInclude Include="src\Utility.h" />
   </ItemGroup>
   <ItemGroup>

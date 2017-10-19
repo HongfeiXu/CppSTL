@@ -18,6 +18,8 @@ STL Ìá¹©ÓÃÓÚ´¦ÀíÊı¾İµÄÈİÆ÷ºÍËã·¨¡£±¾ÕÂÏêÏ¸½éÉÜ STL µÄ¸ÅÄî£¬²¢Öğ²½½âÊÍÆäÖĞµÄ¸ÅÄî¡
 #include <functional>		// to use std::greater
 #include <algorithm>
 #include <iterator>
+#include <cstdlib>			// stdLLabs()
+#include <string>
 
 #include "Utility.h"
 
@@ -344,7 +346,8 @@ void f10()
 
 	// print all elements without duplicates
 	std::unique_copy(coll.begin(), coll.end(),					// unique_copy Ïû³ıÅşÁÚµÄÖØ¸´Öµ
-					 std::ostream_iterator<std::string>(std::cout, "\n"));	// ²úÉúÒ»¸ö output stream iterator£¬Í¸¹ı operator<< Ïò cout Ğ´Èë strings¡£ µÚ¶ş¸ö²ÎÊıÎªÔªËØÖ®¼äµÄ·Ö¸ô·û¡£
+					 std::ostream_iterator<std::string>(std::cout, "\n"));	
+					// ²úÉúÒ»¸ö output stream iterator£¬Í¸¹ı operator<< Ïò cout Ğ´Èë strings¡£ µÚ¶ş¸ö²ÎÊıÎªÔªËØÖ®¼äµÄ·Ö¸ô·û¡£
 	/*
 	Apple Mac Lenovo ThinkPad HP OMEN
 	^Z
@@ -451,7 +454,7 @@ void f13() // ÈçºÎ´Ó¹ØÁªÈİÆ÷ÖĞÉ¾³ıÔªËØ
 			  std::ostream_iterator<int>(std::cout, " "));
 	std::cout << std::endl;
 
-	int num = coll.erase(3);
+	std::size_t num = coll.erase(3);
 
 	std::cout << "number of removed elements: " << num << std::endl;
 
@@ -507,6 +510,315 @@ void f14()
 // 5.8 ÒÔº¯Êı×÷ÎªËã·¨µÄ²ÎÊı
 
 // 5.8.1 ¡°ÒÔº¯Êı×÷ÎªËã·¨µÄ²ÎÊı¡± ÊµÀıÊ¾·¶
+// for_each
+void f15()
+{
+	std::vector<int> coll;
+	for (int i = 1; i <= 9; ++i)
+	{
+		coll.push_back(i);
+	}
+	std::for_each(coll.begin(), coll.end(), [](const int& i) { std::cout << i << ' '; });
+	std::cout << std::endl; 
+}
+// transform
+// coll1->transform->coll2
+void f16()
+{
+	std::set<int> coll1;
+	std::vector<int> coll2;
 
+	for (int i = 1; i <= 9; ++i)
+		coll1.insert(i);
+	std::cout << "initialized: ";
+	PRINT_ELEMENTS(coll1, ' ');
+	std::cout << std::endl;
+
+	// transform each element from coll1 to coll2
+	std::transform(coll1.begin(), coll1.end(),
+				   back_inserter(coll2),
+				   [](const int & elem) { return elem * elem; });
+
+	std::cout << "squared: ";
+	PRINT_ELEMENTS(coll2, ' ');
+	std::cout << std::endl;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 5.8.2 ÅĞ¶ÏÊ½ Predicates
+
+// Unary Predicates Ò»ÔªÅĞ¶ÏÊ½
+// µäĞÍÓÃÍ¾ÊÇ¼ì²éÎ¨Ò»²ÎÊıµÄÄ³ÏîÊôĞÔ
+// ÕâÀï isPrime Îª Unary Predicates£¬¿É×÷Îª find_if µÄ²ÎÊı
+bool isPrime(int number)
+{
+	// ignore negative sign
+	number = std::abs(number);
+
+	// 0 and 1 are prime number
+	if (number == 0 || number == 1)
+		return true;
+
+	// find divisor that divides without a remainder
+	int divisor = 0;
+	for (divisor = number / 2; number % divisor != 0; --divisor)
+		;
+
+	// if no divisor greater than 1 is found, it is a prime number
+	return divisor == 1;
+}
+void f17()
+{
+	std::list<int> coll;
+	
+	for (int i = 24; i <= 30; ++i)
+		coll.push_back(i);
+
+	list<int>::const_iterator pos;
+	pos = std::find_if(coll.begin(), coll.end(),	// range
+					   isPrime);					// unary predicate
+	if (pos != coll.end())
+		std::cout << *pos << " is first prime number found" << std::endl;
+	else
+		std::cout << "no prime number found" << std::endl;
+}
+
+// Binary Predicates ¶şÔªÅĞ¶ÏÊ½
+// µäĞÍÓÃÍ¾ÊÇ±È½ÏÁ½¸ö²ÎÊıµÄÌØ¶¨ÊôĞÔ
+
+class Person {
+private:
+	std::string firstname;
+	std::string lastname;
+public:
+	Person() : firstname(), lastname() { }
+	Person(std::string firstname_, std::string secondname_ )
+		: firstname(firstname_), lastname(secondname_)
+	{ }
+	void PrintName()
+	{
+		std::cout << firstname << " " << lastname << std::endl;
+	}
+	std::string GetFirstname() const
+	{
+		return firstname;
+	}
+	std::string GetLastname() const
+	{
+		return lastname;
+	}
+};
+
+// binary predicate:
+// - returns whether a person is less than another person
+bool personSortCriterion(const Person& p1, const Person& p2)
+{
+	return(p1.GetLastname() < p2.GetLastname() ||
+		   (!(p2.GetLastname() < p1.GetLastname())) &&
+		   p1.GetFirstname() < p2.GetFirstname());
+}
+
+void f18()
+{
+	std::deque<Person> coll;
+	Person p1("Lebron", "James");
+	Person p2("Kobe", "Bryant");
+	Person p3("Ice", "MJ");
+	coll.push_back(p1);
+	coll.push_back(p2);
+	coll.push_back(p3);
+
+	std::cout << "pre: " << std::endl;
+	std::for_each(coll.begin(), coll.end(),
+				  [](const Person& person) { std::cout << person.GetFirstname() << " " << person.GetLastname() << std::endl; });
+
+	std::sort(coll.begin(), coll.end(),			// range
+			  personSortCriterion);				// sort criterion
+
+	std::cout << "post: " << std::endl;
+	std::for_each(coll.begin(), coll.end(),
+				  [](const Person& person) { std::cout << person.GetFirstname() << " " << person.GetLastname() << std::endl; });
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 5.9 ·Âº¯Êı Functors, Function Objects
+
+// 5.9.1 Ê²Ã´ÊÇ·Âº¯Êı
+// Ê²Ã´ÊÇ·Âº¯Êı£¿ÈÎºÎ¶«Î÷£¬Ö»ÒªĞĞÎªÏñº¯Êı£¬Ëü¾ÍÊÇ¸öº¯Êı¡£Òò´ËÈç¹ûÄã¶¨ÒåÁËÒ»¸ö¶ÔÏó£¬ĞĞÎªÏñº¯Êı£¬Ëü¾Í¿ÉÒÔ±»µ±×öº¯ÊıÀ´Ê¹ÓÃ¡£
+// ÄÇÃ´Ê²Ã´²ÅËãÊÇ¾ß±¸º¯ÊıĞĞÎª£¿ËùÎ½º¯ÊıĞĞÎª£¬ÊÇÖ¸¿ÉÒÔ¡°Ê¹ÓÃĞ¡À¨ºÅ´«µİ²ÎÊı£¬½èÒÔµ÷ÓÃÄ³¸ö¶«Î÷¡±¡£
+// Ö»ĞèÔÚÀàÖĞ¶¨Òå operator()£¬²¢¸øÓèºÏÊÊµÄ²ÎÊıĞÍ±ğ¡£
+
+// Functor
+class PrintInt {
+public:
+	void operator() (int elem) const
+	{
+		std::cout << elem << " ";
+	}
+};
+
+void print(int elem)
+{
+	std::cout << elem << ' ';
+}
+
+void f19()
+{
+	std::vector<int> coll;
+	for (int i = 1; i <= 9; ++i)
+		coll.push_back(i);
+	//std::for_each(coll.begin(), coll.end(), print);	// ÒÔº¯Êı×÷ÎªËã·¨µÄ²ÎÊı
+	std::for_each(coll.begin(), coll.end(), PrintInt());// ÒÔ·Âº¯Êı×÷ÎªËã·¨µÄ²ÎÊı£¬
+														// ÆäÖĞ PrintInt() ²úÉú³ö´ËÀà±ğµÄÒ»¸öÁÙÊ±¶ÔÏó£¬µ±×ö for_each() Ëã·¨µÄÒ»¸ö²ÎÊı¡£
+	std::cout << std::endl;
+}
+
+// ·Âº¯ÊıÓÅµã
+// 1. ·Âº¯ÊıÊÇ "smart functions"£¬
+// ·Âº¯Êı¿ÉÓµÓĞ³ÉÔ±º¯ÊıºÍ³ÉÔ±±äÁ¿£¬ÕâÒâÎ¶×ÅÆäÓµÓĞ×´Ì¬¡£ÁíÍâ£¬Äã¿ÉÒÔÔÚÖ´ĞĞÆÚ(runtime)³õÊ¼»¯ËüÃÇ¡£
+// 2. Ã¿¸ö·Âº¯Êı¶¼ÓĞ×Ô¼ºµÄĞÍ±ğ
+// 3. ·Âº¯ÊıÍ¨³£±ÈÒ»°ãº¯ÊıËÙ¶È¿ì
+
+template <int theValue>
+void add(int &elem)		// ¶ÔÓÚ template ¶øÑÔ£¬¸ü¶àÏ¸½ÚÔÚ±àÒëÆÚ¾ÍÒÑ¾­È·¶¨
+{
+	elem += theValue;
+}
+
+void f20()
+{
+	std::vector<int> coll;
+	for (int i = 1; i <= 9; ++i)
+		coll.push_back(i);
+	std::for_each(coll.begin(), coll.end(), 
+				  add<10>);
+	//std::for_each(coll.begin(), coll.end(),	// ERROR
+	//			  add<coll.front()>);			// Ä£°å²ÎÊıÓ¦¸ÃÎª±àÒëÊ±³£Á¿±í´ïÊ½£¬¼´±àÒëÊ±ÒÑ¾­È·¶¨µÄÖµ£¬ÕâÀïµÄÖµÔÚÔËĞĞÊ±È·¶¨
+	PRINT_ELEMENTS(coll, ' ');
+	std::cout << std::endl;
+}
+// Functor
+class AddValue {
+private:
+	int theValue = 0;
+public:
+	AddValue(int theValue_) : theValue(theValue_) { }
+	void operator() (int& elem)
+	{
+		elem += theValue;
+	}
+};
+
+void f21()
+{
+	std::vector<int> coll;
+	for (int i = 1; i <= 9; ++i)
+		coll.push_back(i);
+	std::for_each(coll.begin(), coll.end(),
+				  AddValue(10));				// AddValue(10) Éú³ÉÒ»¸ö AddValue Îï¼ş£¬²¢ÒÔ 10 Îª³õÖµ¡£
+	PRINT_ELEMENTS(coll, ' ');
+	std::cout << std::endl;
+
+	std::for_each(coll.begin(), coll.end(),
+				  AddValue(coll.front()));		// ·Âº¯ÊıµÄ³ÉÔ±±äÁ¿¿ÉÒÔÔÚÖ´ĞĞÆ÷³õÊ¼»¯£¬ÕâµãÒ»°ãº¯ÊıÊÇ×ö²»µ½µÄ
+												// AddValue(coll.front()) Éú³ÉÒ»¸ö AddValue Îï¼ş£¬²¢ÒÔ coll.front() Îª³õÖµ
+	PRINT_ELEMENTS(coll, ' ');
+	std::cout << std::endl;
+
+	/*
+	11 12 13 14 15 16 17 18 19
+	22 23 24 25 26 27 28 29 30
+	Çë°´ÈÎÒâ¼ü¼ÌĞø. . .
+	*/
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 5.9.2 Ô¤ÏÈ¶¨ÒåµÄ·Âº¯Êı
+// less<> greater<> negate<> multplies<> equal_to<>
+void f22()
+{
+	std::vector<int> coll { 1,2,3,4,5 };
+	std::transform(coll.begin(), coll.end(),	// source
+				   coll.begin(),				// destination
+				   std::negate <int>());		// operation
+	PRINT_ELEMENTS(coll, ' ');
+	std::cout << std::endl;
+	std::transform(coll.begin(), coll.end(),	// first source
+				   coll.begin(),				// second source
+				   coll.begin(),				// destination
+				   std::multiplies<int>());		// operation
+	PRINT_ELEMENTS(coll, ' ');
+	std::cout << std::endl;
+}
+
+// Í¸¹ıÒ»Ğ©ÌØÊâµÄº¯ÊıÊÊÅäÆ÷ function adaptors £¬Äã¿ÉÒÔ½«Ô¤ÏÈ¶¨ÒåµÄ·Âº¯ÊıºÍÆäËüÊıÖµ×éºÏÔÚÒ»Æğ£¬»òÊ¹ÓÃÌØÊâ×´¿ö
+// std::bind2nd 
+// (deprecated in C++11) 
+// (removed in C++17)
+void f23()
+{
+	std::set<int, std::greater<int>> coll1;
+	std::deque<int> coll2;
+
+	for (int i = 1; i <= 9; ++i)
+		coll1.insert(i);
+
+	PRINT_ELEMENTS(coll1, ' ');
+	std::cout << std::endl;
+
+	// transform all elements into coll2 by multiplying 10
+	std::transform(coll1.begin(), coll1.end(),					// source
+				   back_inserter(coll2),						// destination
+				   std::bind2nd(std::multiplies<int>(), 10));	// operation
+					// ÕâÀïÊ¹ÓÃÊÊÅäÆ÷ bind2nd£¬½øĞĞ multiplies<int> ÔËËãÊ±£¬
+					// ÒÔÔ´Èº¼¯µÄÔªËØ×÷ÎªµÚÒ»²ÎÊı£¬10 ×÷ÎªµÚ¶ş²ÎÊı¡£
+
+	PRINT_ELEMENTS(coll2, ' ');
+	std::cout << std::endl;
+
+	// replace value equal to 70 with 42
+	std::replace_if(coll2.begin(), coll2.end(),					// range
+					std::bind2nd(std::equal_to<int>(), 70),		// range criterion
+					42);										// new value
+
+	PRINT_ELEMENTS(coll2, ' ');
+	std::cout << std::endl;
+
+	// remove all elements with values less than 50
+	coll2.erase(std::remove_if(coll2.begin(), coll2.end(),		// range
+				std::bind2nd(std::less<int>(), 50)),			// range criterion
+				coll2.end());
+
+	PRINT_ELEMENTS(coll2, ' ');
+	std::cout << std::endl;
+}
+
+// std::mem_fun_ref ÓÃÀ´µ÷ÓÃËüËù×÷ÓÃµÄÔªËØµÄÄ³¸ö³ÉÔ±º¯Êı
+// (deprecated in C++11)
+// (removed in C++17)
+void f24()
+{
+	std::vector<Person> coll;
+	Person p1("Lebron", "James");
+	Person p2("Kobe", "Bryant");
+	Person p3("Ice", "MJ");
+	coll.push_back(p1);
+	coll.push_back(p2);
+	coll.push_back(p3);
+
+	for_each(coll.begin(), coll.end(),				// range
+			 std::mem_fun_ref(&Person::PrintName));	// operation
+}
+
+//////////////////////////////////////////////////////////////////////////
+// 5.10 ÈİÆ÷ÄÚµÄÔªËØ
+
+//////////////////////////////////////////////////////////////////////////
+// 5.11 STL ÄÚ²¿µÄ´íÎó´¦ÀíºÍÒì³£´¦Àí
+
+// ¶ÑÕ»Õ·×ª¿ª½â£ºhttp://www.geeksforgeeks.org/stack-unwinding-in-c/
+
+//////////////////////////////////////////////////////////////////////////
+// 5.12 À©Õ¹ STL
 
 }
