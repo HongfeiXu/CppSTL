@@ -128,16 +128,16 @@ void f3()	// 展示如何在 set 之中安插元素，并使用迭代器来打印它们
 // multimap
 void f4()
 {
-	typedef multimap<int, string> IntStringMMap;
+	typedef std::multimap<int, std::string> IntStringMMap;
 
 	IntStringMMap coll;		// container for int/string values
-	coll.insert(make_pair(5, "tagged"));
-	coll.insert(make_pair(2, "a"));
-	coll.insert(make_pair(1, "this"));
-	coll.insert(make_pair(4, "of"));
-	coll.insert(make_pair(6, "strings"));
-	coll.insert(make_pair(1, "is"));
-	coll.insert(make_pair(3, "multimap"));
+	coll.insert(std::make_pair(5, "tagged"));
+	coll.insert(std::make_pair(2, "a"));
+	coll.insert(std::make_pair(1, "this"));
+	coll.insert(std::make_pair(4, "of"));
+	coll.insert(std::make_pair(6, "strings"));
+	coll.insert(std::make_pair(1, "is"));
+	coll.insert(std::make_pair(3, "multimap"));
 
 	IntStringMMap::const_iterator pos;
 	for (pos = coll.begin(); pos != coll.end(); ++pos)
@@ -150,6 +150,7 @@ void f4()
 // 将 Maps 当做关联式数组 associative arrays。所谓关联式数组就是：索引可以采用任何型别。
 void f5()
 {
+	using namespace std;
 	typedef map<string, float> StringFloatMap;
 	StringFloatMap coll;
 	coll["VAT"] = 0.15f;
@@ -569,7 +570,8 @@ bool isPrime(int number)
 }
 void f17()
 {
-	std::list<int> coll;
+	using namespace std;
+	list<int> coll;
 	
 	for (int i = 24; i <= 30; ++i)
 		coll.push_back(i);
@@ -578,9 +580,9 @@ void f17()
 	pos = std::find_if(coll.begin(), coll.end(),	// range
 					   isPrime);					// unary predicate
 	if (pos != coll.end())
-		std::cout << *pos << " is first prime number found" << std::endl;
+		cout << *pos << " is first prime number found" << endl;
 	else
-		std::cout << "no prime number found" << std::endl;
+		cout << "no prime number found" << endl;
 }
 
 // Binary Predicates 二元判断式

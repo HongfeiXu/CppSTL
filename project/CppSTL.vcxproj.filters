@@ -38,5 +38,14 @@
     <ClInclude Include="src\CommonContainerAbilitiesAndOperations.h">
       <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ch_6_2_Vectors.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_6_3_Deques.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_6_4_Lists.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

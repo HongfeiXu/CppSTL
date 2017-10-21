@@ -20,6 +20,11 @@ namespace CH_4_H
 // 4.1 Pairs 对组
 void f()
 {
+	using std::cout;
+	using std::endl;
+	using std::numeric_limits;
+	using std::boolalpha;
+
 	std::pair<int, const char*> p(40, "hello");
 	std::pair<int, const char*> p_2(p);			// OK: calls built-in default copy constructor
 	std::pair<int, std::string> p_3(p);			// OK: calls template constructor
@@ -44,6 +49,7 @@ void f2()
 	using std::endl;
 	using std::numeric_limits;
 	using std::boolalpha;
+	using std::string;
 
 	// numeric_limits<> 使用范例
 	// use textual representation for bool

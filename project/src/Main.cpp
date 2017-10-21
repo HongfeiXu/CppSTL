@@ -1,11 +1,8 @@
-#include "Ch_1-3.h"
-#include "Ch_4.h"
-#include "ch_5_STL.h"
-#include "CommonContainerAbilitiesAndOperations.h"
+#include "Ch_6_4_Lists.h"
 
 int main()
 {
-	CH6_1::f1();
+	CH6_4_LISTS_H::f3();
 
 	return 0;
 }
