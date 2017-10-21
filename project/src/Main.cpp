@@ -1,8 +1,8 @@
-#include "Ch_6_4_Lists.h"
+#include "Ch_6_5_Sets.h"
 
 int main()
 {
-	CH6_4_LISTS_H::f3();
+	CH6_5_SETS_H::f7();
 
 	return 0;
 }

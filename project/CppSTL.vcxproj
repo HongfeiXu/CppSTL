@@ -148,6 +148,7 @@
     <ClInclude Include="src\Ch_6_2_Vectors.h" />
     <ClInclude Include="src\Ch_6_3_Deques.h" />
     <ClInclude Include="src\Ch_6_4_Lists.h" />
+    <ClInclude Include="src\Ch_6_5_Sets.h" />
     <ClInclude Include="src\CommonContainerAbilitiesAndOperations.h" />
     <ClInclude Include="src\Utility.h" />
   </ItemGroup>

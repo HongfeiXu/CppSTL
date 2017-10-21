@@ -38,6 +38,7 @@ namespace CH6_4_LISTS_H
 // 元素的安插 Inserting 和移除 Removing
 // 注：Lists 增加了 remove() 和 remove_if() 算法应用于自身的特殊版本。
 // 这要比普通版本的 remove 算法更快。
+// 如果要安插或移除多个元素，你可以对它们进行单一调用，比多次调用来的快。
 void f()
 {
 	list<int> coll { 1,1,2,3,4,5 };

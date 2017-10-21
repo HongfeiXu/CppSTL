@@ -45,7 +45,10 @@
       <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
     <ClInclude Include="src\Ch_6_4_Lists.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_6_5_Sets.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
