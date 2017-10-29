@@ -1,8 +1,8 @@
-#include "Ch_6_5_Sets.h"
+#include "Ch_6_6_Maps.h"
 
 int main()
 {
-	CH6_5_SETS_H::f7();
+	CH_6_6_MAPS_H::f7();
 
 	return 0;
 }

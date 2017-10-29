@@ -50,5 +50,8 @@
     <ClInclude Include="src\Ch_6_5_Sets.h">
       <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ch_6_6_Maps.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

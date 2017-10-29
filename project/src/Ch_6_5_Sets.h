@@ -22,6 +22,7 @@ set 和 multiset 会根据特定的排序准则，自动将元素排序。
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <cassert>
 #include "Utility.h"
 
 using namespace std;
@@ -39,10 +40,11 @@ namespace CH6_5_SETS_H
 
 //////////////////////////////////////////////////////////////////////////
 // 6.5.2 Sets 和 Multisets 的操作函数
+
 // 有两种方式可以定义排序准则：
 // 1. 以 template 参数定义之。这种情况下，排序准则就是型别的一部分。例如： std::set<int, std::greater<int>> coll;
 // 2. 以构造函数参数定义之。这种情况下，同一型别可以运用不同的排序准则，而排序准则的初始值或状态也可以不同。
-// 如果执行器才获得排序准则，而且需要用到不同的排序准则（但数据型别必须相同），此方式方可排上用场。
+// 如果执行时才获得排序准则，而且需要用到不同的排序准则（但数据型别必须相同），此方式方可排上用场。
 
 // 非变动性操作 Nonmodifying Operations
 // 用来查询大小、相互比较
@@ -75,7 +77,12 @@ void f()
 // set 和 multiset 提供了特殊的搜寻函数，这些函数都是同名的 STL 算法的特殊版本。
 // 有着对数时间复杂度。
 // count find lower_bound upper_bound equal_range
-
+// 注：iterator lower_bound( const Key& key );  
+//		Returns an iterator pointing to the first element that is not less than key.
+// 注：iterator upper_bound( const Key& key );
+//		Returns an iterator pointing to the first element that is greater than key.
+// 注：std::pair<iterator,iterator> equal_range( const Key& key );
+//		Returns a range containing all elements with the given key in the container.
 void f2()
 {
 	set<int> c;
@@ -113,7 +120,7 @@ void f2()
 
 // 迭代器相关函数 Iterator Functions
 // 注：和其他所有关联容器类似，这里的迭代器是双向迭代器。所以，无法使用那些只能用于随机存取迭代器的 STL 算法。
-// 更重要的是，对于迭代器而言，所有元素都被视为常熟，这可确保你不会人为改变元素值，从而打乱既定顺序。
+// 更重要的是，对于迭代器而言，所有元素都被视为常数，这可确保你不会人为改变元素值，从而打乱既定顺序。
 // 例如你不能对它们调用 remove()，因为 remove() 实际上是以一个参数值覆盖被移除的元素。
 // 如果要移除元素，你只能使用 set 或 multiset 所提供的成员函数。
 
@@ -124,17 +131,32 @@ void f2()
 // 注：所有拥有：“位置提示参数”的安插函数，其返回值型别都一样，不论是 set 还是 multiset，都只返回一个迭代器。
 // http://en.cppreference.com/w/cpp/container/set/insert
 // http://en.cppreference.com/w/cpp/container/multiset/insert
-
 void f3()
 {
-	set<double> c;
-	if (c.insert(3.3).second)
-		cout << "3.3 inserted" << endl;
-	else
-		cout << "3.3 already exists" << endl;
+	std::set<int> set;
+
+	auto result_1 = set.insert(3);
+	assert(result_1.first != set.end()); // it's a valid iterator
+	assert(*result_1.first == 3);
+	if (result_1.second)
+		std::cout << "insert done\n";
+
+	auto result_2 = set.insert(3);
+	assert(result_2.first == result_1.first); // same iterator
+	assert(*result_2.first == 3);
+	if (!result_2.second)
+		std::cout << "no insertion\n";
+
+	/*
+	insert done
+	no insertion
+	请按任意键继续. . .
+	*/
 }
 
 // 如果 multisets 内含重复元素，你不能直接使用 erase 来删除这些重复元素中的第一个。可以采用如下做法。
+// http://en.cppreference.com/w/cpp/container/multiset/erase
+// 注：References and iterators to the erased elements are invalidated. Other references and iterators are not affected.
 void f4()
 {
 	typedef multiset<int> MSetInt;
@@ -150,8 +172,17 @@ void f4()
 	1 1 2 3 4
 	请按任意键继续. . .
 	*/
-}
 
+	MSetInt c = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	// erase all odd numbers from c
+	for (auto it = c.begin(); it != c.end(); )
+		if (*it % 2 == 1)
+			it = c.erase(it);	// Iterator following the last removed element
+		else
+			++it;
+	for (int n : c)
+		std::cout << n << ' ';
+}
 
 //////////////////////////////////////////////////////////////////////////
 // 6.5.3 异常处理 Exception Handling
@@ -177,7 +208,7 @@ void f5()
 	coll1.insert(2);
 	coll1.insert(5);
 
-	// iterator voer all elements and print them
+	// iterator over all elements and print them
 	IntSet::const_iterator pos;
 	for (pos = coll1.begin(); pos != coll1.end(); ++pos)
 	{
@@ -252,7 +283,7 @@ void f6()
 	coll1.insert(2);
 	coll1.insert(5);
 
-	// iterator voer all elements and print them
+	// iterator over all elements and print them
 	MIntSet::const_iterator pos;
 	for (pos = coll1.begin(); pos != coll1.end(); ++pos)
 	{
@@ -266,7 +297,7 @@ void f6()
 		<< distance(coll1.begin(), insert_pos) + 1
 		<< endl;
 
-	// assign elements to another set with ascneding order
+	// assign elements to another set with ascending order
 	multiset<int> coll2(coll1.begin(), coll1.end());
 
 	// print all elements of the copy
@@ -369,22 +400,31 @@ void f7()
 	PRINT_ELEMENTS(coll2, ' ');
 	cout << endl;
 
+	if (coll1 == coll2)		// 这里不会提示出错，因为 coll1 和 coll2 具有相同的型别（key和排序准则）。但因为排序准则型别所产生的对象不同（即排序准则不同），所以这里 coll1 != coll2
+		cout << "coll1 == coll2" << endl;
+	else
+		cout << "coll1 != coll2" << endl;
+
+	if (coll1.value_comp() == coll2.value_comp())
+		cout << "coll1 and coll2 have same sorting criterion"
+			<< endl;
+	else
+		cout << "coll1 and coll2 have different sorting criterion"
+			<< endl;
+
 	coll1 = coll2;		// coll1 和 coll2 拥有相同型别 set<int, RuntimeCmp<int>>。 assignment 操作符不仅赋值了元素，也赋值了排序准则。
+						// coll1 和 coll2 的比较准则不同，但比较准则型别相同。
 	coll1.insert(3);
 	cout << "coll1: ";
 	PRINT_ELEMENTS(coll1, ' ');
 	cout << endl;
 
 	if (coll1.value_comp() == coll2.value_comp())
-	{
 		cout << "coll1 and coll2 have same sorting criterion"
 			<< endl;
-	}
 	else
-	{
 		cout << "coll1 and coll2 have different sorting criterion"
 			<< endl;
-	}
 
 	/*
 	coll1: 1 2 4 5 6 7
