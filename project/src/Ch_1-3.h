@@ -10,6 +10,7 @@ chapter 1~3
 
 #include <iostream>
 #include <vector>
+#include <bitset>
 #include <string>
 
 using namespace std;
@@ -89,4 +90,47 @@ void f3()
 	cout << s1.size() << endl;
 //	MyStack s2 = 4;				// ERROR
 }
+
+//////////////////////////////////////////////////////////////////////////
+// 3.1.9 New Template Features
+
+/*
+Variadic Templates
+
+Since C++11, templates can have parameters that accept a variable number of template arguments.
+This ability is called variadic templates. For example, you can use the following to call print()
+for a variable number of arguments of different types:
+*/
+
+void Print()
+{
+
+}
+
+template<typename T, typename... Types>
+void Print(const T& firstArg, const Types... args)
+{
+	std::cout << firstArg << std::endl;	// print first argument
+	Print(args...);						// call print() for remaining arguments
+}
+
+/*
+If one or more arguments are passed, the function template is used, which by specifying the first
+argument separately allows the first argument to print and then recursively calls print() for the
+remaining arguments. To end the recursion, the non-template overload of print() is provided.
+*/
+
+void f4()
+{
+	Print(7.5, "Hello", bitset<16>(377), 42);
+
+	/*
+	7.5
+	Hello
+	0000000101111001
+	42
+	请按任意键继续. . .
+	*/
+}
+
 }	// !CH_1_3_H

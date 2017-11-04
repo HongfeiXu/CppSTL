@@ -35,9 +35,6 @@
     <ClInclude Include="src\Ch_5_STL.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\CommonContainerAbilitiesAndOperations.h">
-      <Filter>头文件\Ch6_STL_Container</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ch_6_2_Vectors.h">
       <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
@@ -51,7 +48,31 @@
       <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
     <ClInclude Include="src\Ch_6_6_Maps.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_6_7_OtherStlContainers.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_6_1_CommonContainerAbilitiesAndOperations.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ch_7_9_UnorderedContainers.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hashval.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hashfunc1.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hashfunc2.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\buckets.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="src\refsem1.h">
+      <Filter>头文件\Ch6_STL_Container</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
