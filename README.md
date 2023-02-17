@@ -1,2 +1,3 @@
 # CppSTL
-The C++ Standard Library
+notes about 《The C++ Standard Library 2nd》
+
